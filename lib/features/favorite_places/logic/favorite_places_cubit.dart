@@ -1,23 +1,43 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_practice11/core/models/favorite_place_model.dart';
-import 'package:uuid/uuid.dart';
+import 'package:flutter_practice11/domain/usecases/places/get_places_usecase.dart';
+import 'package:flutter_practice11/domain/usecases/places/add_place_usecase.dart';
+import 'package:flutter_practice11/domain/usecases/places/update_place_usecase.dart';
+import 'package:flutter_practice11/domain/usecases/places/delete_place_usecase.dart';
 import 'favorite_places_state.dart';
 
 class FavoritePlacesCubit extends Cubit<FavoritePlacesState> {
-  FavoritePlacesCubit() : super(const FavoritePlacesState());
+  final GetPlacesUseCase getPlacesUseCase;
+  final AddPlaceUseCase addPlaceUseCase;
+  final UpdatePlaceUseCase updatePlaceUseCase;
+  final DeletePlaceUseCase deletePlaceUseCase;
 
-  final _uuid = const Uuid();
+  FavoritePlacesCubit({
+    required this.getPlacesUseCase,
+    required this.addPlaceUseCase,
+    required this.updatePlaceUseCase,
+    required this.deletePlaceUseCase,
+  }) : super(const FavoritePlacesState());
 
-  void addPlace({
+  Future<void> loadPlaces() async {
+    try {
+      final places = await getPlacesUseCase();
+      emit(state.copyWith(places: places));
+    } catch (e) {
+      emit(state.copyWith(places: []));
+    }
+  }
+
+  Future<void> addPlace({
     required String name,
     required PlaceType type,
     required String address,
     String? phone,
     double rating = 0.0,
     String? notes,
-  }) {
+  }) async {
     final newPlace = FavoritePlaceModel(
-      id: _uuid.v4(),
+      id: '',
       name: name,
       type: type,
       address: address,
@@ -26,38 +46,42 @@ class FavoritePlacesCubit extends Cubit<FavoritePlacesState> {
       notes: notes,
     );
 
-    final updatedPlaces = List<FavoritePlaceModel>.from(state.places)
-      ..add(newPlace);
-    emit(state.copyWith(places: updatedPlaces));
+    try {
+      await addPlaceUseCase(newPlace);
+      await loadPlaces();
+    } catch (e) {
+      rethrow;
+    }
   }
 
-  void updatePlace(FavoritePlaceModel updatedPlace) {
-    final placeIndex = state.places.indexWhere((p) => p.id == updatedPlace.id);
-    if (placeIndex < 0) return;
-
-    final updatedPlaces = List<FavoritePlaceModel>.from(state.places);
-    updatedPlaces[placeIndex] = updatedPlace;
-
-    emit(state.copyWith(places: updatedPlaces));
+  Future<void> updatePlace(FavoritePlaceModel updatedPlace) async {
+    try {
+      await updatePlaceUseCase(updatedPlace);
+      await loadPlaces();
+    } catch (e) {
+      rethrow;
+    }
   }
 
-  void deletePlace(String id) {
-    final updatedPlaces = state.places.where((p) => p.id != id).toList();
-    emit(state.copyWith(places: updatedPlaces));
+  Future<void> deletePlace(String id) async {
+    try {
+      await deletePlaceUseCase(id);
+      await loadPlaces();
+    } catch (e) {
+      rethrow;
+    }
   }
 
-  void markVisited(String id) {
-    final placeIndex = state.places.indexWhere((p) => p.id == id);
-    if (placeIndex < 0) return;
-
-    final updatedPlace = state.places[placeIndex].copyWith(
-      lastVisit: DateTime.now(),
-    );
-
-    final updatedPlaces = List<FavoritePlaceModel>.from(state.places);
-    updatedPlaces[placeIndex] = updatedPlace;
-
-    emit(state.copyWith(places: updatedPlaces));
+  Future<void> markVisited(String id) async {
+    try {
+      final places = await getPlacesUseCase();
+      final place = places.firstWhere((p) => p.id == id);
+      final updatedPlace = place.copyWith(lastVisit: DateTime.now());
+      await updatePlaceUseCase(updatedPlace);
+      await loadPlaces();
+    } catch (e) {
+      rethrow;
+    }
   }
 
   void setFilter(PlaceType? type) {
@@ -68,5 +92,3 @@ class FavoritePlacesCubit extends Cubit<FavoritePlacesState> {
     emit(const FavoritePlacesState());
   }
 }
-
-

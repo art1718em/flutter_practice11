@@ -1,37 +1,64 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_practice11/core/models/app_settings_model.dart';
+import 'package:flutter_practice11/domain/usecases/settings/get_settings_usecase.dart';
+import 'package:flutter_practice11/domain/usecases/settings/update_settings_usecase.dart';
 import 'settings_state.dart';
 
 class SettingsCubit extends Cubit<SettingsState> {
-  SettingsCubit() : super(const SettingsState());
+  final GetSettingsUseCase getSettingsUseCase;
+  final UpdateSettingsUseCase updateSettingsUseCase;
 
-  void setThemeMode(AppThemeMode mode) {
+  SettingsCubit({
+    required this.getSettingsUseCase,
+    required this.updateSettingsUseCase,
+  }) : super(const SettingsState()) {
+    loadSettings();
+  }
+
+  Future<void> loadSettings() async {
+    try {
+      final settings = await getSettingsUseCase();
+      emit(state.copyWith(settings: settings));
+    } catch (e) {
+      emit(const SettingsState());
+    }
+  }
+
+  Future<void> setThemeMode(AppThemeMode mode) async {
     final updatedSettings = state.settings.copyWith(themeMode: mode);
-    emit(state.copyWith(settings: updatedSettings));
+    await _updateSettings(updatedSettings);
   }
 
-  void setCurrency(Currency currency) {
+  Future<void> setCurrency(Currency currency) async {
     final updatedSettings = state.settings.copyWith(currency: currency);
-    emit(state.copyWith(settings: updatedSettings));
+    await _updateSettings(updatedSettings);
   }
 
-  void setDistanceUnit(DistanceUnit unit) {
+  Future<void> setDistanceUnit(DistanceUnit unit) async {
     final updatedSettings = state.settings.copyWith(distanceUnit: unit);
-    emit(state.copyWith(settings: updatedSettings));
+    await _updateSettings(updatedSettings);
   }
 
-  void toggleNotifications(bool enabled) {
+  Future<void> toggleNotifications(bool enabled) async {
     final updatedSettings = state.settings.copyWith(notificationsEnabled: enabled);
-    emit(state.copyWith(settings: updatedSettings));
+    await _updateSettings(updatedSettings);
   }
 
-  void toggleAutoBackup(bool enabled) {
+  Future<void> toggleAutoBackup(bool enabled) async {
     final updatedSettings = state.settings.copyWith(autoBackup: enabled);
-    emit(state.copyWith(settings: updatedSettings));
+    await _updateSettings(updatedSettings);
+  }
+
+  Future<void> _updateSettings(AppSettingsModel settings) async {
+    try {
+      await updateSettingsUseCase(settings);
+      emit(state.copyWith(settings: settings));
+    } catch (e) {
+      rethrow;
+    }
   }
 
   void resetSettings() {
     emit(const SettingsState());
   }
 }
-

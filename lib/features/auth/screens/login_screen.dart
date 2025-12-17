@@ -40,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body:       BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state.status == AuthStatus.authenticated && state.user != null) {
-            context.read<ProfileCubit>().loadProfile(
+            context.read<ProfileCubit>().initializeProfile(
               state.user!.id,
               state.user!.name,
               state.user!.email,

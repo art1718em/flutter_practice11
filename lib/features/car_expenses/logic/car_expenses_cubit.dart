@@ -1,53 +1,77 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_practice11/core/models/expense_model.dart';
-import 'package:uuid/uuid.dart';
+import 'package:flutter_practice11/domain/usecases/expenses/get_expenses_usecase.dart';
+import 'package:flutter_practice11/domain/usecases/expenses/add_expense_usecase.dart';
+import 'package:flutter_practice11/domain/usecases/expenses/delete_expense_usecase.dart';
 import 'car_expenses_state.dart';
 
 class CarExpensesCubit extends Cubit<CarExpensesState> {
-  CarExpensesCubit() : super(const CarExpensesState());
+  final GetExpensesUseCase getExpensesUseCase;
+  final AddExpenseUseCase addExpenseUseCase;
+  final DeleteExpenseUseCase deleteExpenseUseCase;
 
-  final _uuid = const Uuid();
+  CarExpensesCubit({
+    required this.getExpensesUseCase,
+    required this.addExpenseUseCase,
+    required this.deleteExpenseUseCase,
+  }) : super(const CarExpensesState());
 
-  void addExpense(String vehicleId, String title, double amount) {
+  Future<void> loadExpenses() async {
+    try {
+      final expenses = await getExpensesUseCase();
+      emit(state.copyWith(expenses: expenses));
+    } catch (e) {
+      emit(state.copyWith(expenses: []));
+    }
+  }
+
+  Future<void> addExpense(String vehicleId, String title, double amount) async {
     final newExpense = ExpenseModel(
-      id: _uuid.v4(),
+      id: '',
       vehicleId: vehicleId,
       title: title,
       amount: amount,
       date: DateTime.now(),
     );
-    final updatedExpenses = List<ExpenseModel>.from(state.expenses)
-      ..add(newExpense);
-    emit(state.copyWith(expenses: updatedExpenses));
+
+    try {
+      await addExpenseUseCase(newExpense);
+      await loadExpenses();
+    } catch (e) {
+      rethrow;
+    }
   }
 
-  void removeExpense(String id) {
+  Future<void> removeExpense(String id) async {
     final expenseIndex = state.expenses.indexWhere((expense) => expense.id == id);
     if (expenseIndex < 0) {
       return;
     }
 
     final expenseToRemove = state.expenses[expenseIndex];
-    final updatedExpenses = List<ExpenseModel>.from(state.expenses)
-      ..removeAt(expenseIndex);
 
-    emit(state.copyWith(
-      expenses: updatedExpenses,
-      recentlyRemovedExpense: expenseToRemove,
-      recentlyRemovedExpenseIndex: expenseIndex,
-    ));
+    try {
+      await deleteExpenseUseCase(id);
+      await loadExpenses();
+      
+      emit(state.copyWith(
+        recentlyRemovedExpense: expenseToRemove,
+        recentlyRemovedExpenseIndex: expenseIndex,
+      ));
+    } catch (e) {
+      rethrow;
+    }
   }
 
-  void undoRemove() {
-    if (state.recentlyRemovedExpense != null &&
-        state.recentlyRemovedExpenseIndex != null) {
-      final updatedExpenses = List<ExpenseModel>.from(state.expenses)
-        ..insert(state.recentlyRemovedExpenseIndex!,
-            state.recentlyRemovedExpense!);
-      emit(state.copyWith(
-        expenses: updatedExpenses,
-        clearRecentlyRemoved: true,
-      ));
+  Future<void> undoRemove() async {
+    if (state.recentlyRemovedExpense != null) {
+      try {
+        await addExpenseUseCase(state.recentlyRemovedExpense!);
+        await loadExpenses();
+        emit(state.copyWith(clearRecentlyRemoved: true));
+      } catch (e) {
+        rethrow;
+      }
     }
   }
 
@@ -59,4 +83,3 @@ class CarExpensesCubit extends Cubit<CarExpensesState> {
     emit(const CarExpensesState());
   }
 }
-

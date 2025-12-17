@@ -1,13 +1,19 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_practice11/core/models/user_model.dart';
-import 'package:uuid/uuid.dart';
+import 'package:flutter_practice11/domain/usecases/auth/login_usecase.dart';
+import 'package:flutter_practice11/domain/usecases/auth/register_usecase.dart';
+import 'package:flutter_practice11/domain/usecases/auth/logout_usecase.dart';
 import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit() : super(const AuthState());
+  final LoginUseCase loginUseCase;
+  final RegisterUseCase registerUseCase;
+  final LogoutUseCase logoutUseCase;
 
-  final _uuid = const Uuid();
-  final Map<String, Map<String, String>> _users = {};
+  AuthCubit({
+    required this.loginUseCase,
+    required this.registerUseCase,
+    required this.logoutUseCase,
+  }) : super(const AuthState());
 
   Future<void> login(String email, String password) async {
     emit(state.copyWith(status: AuthStatus.loading));
@@ -21,34 +27,26 @@ class AuthCubit extends Cubit<AuthState> {
       return;
     }
 
-    if (!_users.containsKey(email)) {
+    try {
+      final user = await loginUseCase(email, password);
+      if (user != null) {
+        emit(state.copyWith(
+          status: AuthStatus.authenticated,
+          user: user,
+          clearError: true,
+        ));
+      } else {
+        emit(state.copyWith(
+          status: AuthStatus.error,
+          errorMessage: 'Ошибка входа',
+        ));
+      }
+    } catch (e) {
       emit(state.copyWith(
         status: AuthStatus.error,
-        errorMessage: 'Пользователь не найден',
+        errorMessage: e.toString().replaceAll('Exception: ', ''),
       ));
-      return;
     }
-
-    if (_users[email]!['password'] != password) {
-      emit(state.copyWith(
-        status: AuthStatus.error,
-        errorMessage: 'Неверный пароль',
-      ));
-      return;
-    }
-
-    final user = UserModel(
-      id: _users[email]!['id']!,
-      email: email,
-      name: _users[email]!['name']!,
-      registrationDate: DateTime.parse(_users[email]!['registrationDate']!),
-    );
-
-    emit(state.copyWith(
-      status: AuthStatus.authenticated,
-      user: user,
-      clearError: true,
-    ));
   }
 
   Future<void> register(String email, String password, String name) async {
@@ -79,39 +77,23 @@ class AuthCubit extends Cubit<AuthState> {
       return;
     }
 
-    if (_users.containsKey(email)) {
+    try {
+      final user = await registerUseCase(email, password, name);
+      emit(state.copyWith(
+        status: AuthStatus.authenticated,
+        user: user,
+        clearError: true,
+      ));
+    } catch (e) {
       emit(state.copyWith(
         status: AuthStatus.error,
-        errorMessage: 'Пользователь с таким email уже существует',
+        errorMessage: e.toString().replaceAll('Exception: ', ''),
       ));
-      return;
     }
-
-    final userId = _uuid.v4();
-    final registrationDate = DateTime.now();
-
-    _users[email] = {
-      'id': userId,
-      'password': password,
-      'name': name,
-      'registrationDate': registrationDate.toIso8601String(),
-    };
-
-    final user = UserModel(
-      id: userId,
-      email: email,
-      name: name,
-      registrationDate: registrationDate,
-    );
-
-    emit(state.copyWith(
-      status: AuthStatus.authenticated,
-      user: user,
-      clearError: true,
-    ));
   }
 
-  void logout() {
+  Future<void> logout() async {
+    await logoutUseCase();
     emit(const AuthState(status: AuthStatus.unauthenticated));
   }
 
@@ -123,4 +105,3 @@ class AuthCubit extends Cubit<AuthState> {
     return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
   }
 }
-

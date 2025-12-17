@@ -1,14 +1,28 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_practice11/core/models/service_record_model.dart';
-import 'package:uuid/uuid.dart';
+import 'package:flutter_practice11/domain/usecases/service/get_service_records_usecase.dart';
+import 'package:flutter_practice11/domain/usecases/service/add_service_record_usecase.dart';
 import 'service_history_state.dart';
 
 class ServiceHistoryCubit extends Cubit<ServiceHistoryState> {
-  ServiceHistoryCubit() : super(const ServiceHistoryState());
+  final GetServiceRecordsUseCase getServiceRecordsUseCase;
+  final AddServiceRecordUseCase addServiceRecordUseCase;
 
-  final _uuid = const Uuid();
+  ServiceHistoryCubit({
+    required this.getServiceRecordsUseCase,
+    required this.addServiceRecordUseCase,
+  }) : super(const ServiceHistoryState());
 
-  void addServiceRecord({
+  Future<void> loadServiceRecords() async {
+    try {
+      final records = await getServiceRecordsUseCase();
+      emit(state.copyWith(serviceRecords: records));
+    } catch (e) {
+      emit(state.copyWith(serviceRecords: []));
+    }
+  }
+
+  Future<void> addServiceRecord({
     required String vehicleId,
     required String title,
     required ServiceType type,
@@ -18,9 +32,9 @@ class ServiceHistoryCubit extends Cubit<ServiceHistoryState> {
     String? serviceCenter,
     String? notes,
     DateTime? nextServiceDate,
-  }) {
+  }) async {
     final newRecord = ServiceRecordModel(
-      id: _uuid.v4(),
+      id: '',
       vehicleId: vehicleId,
       title: title,
       type: type,
@@ -31,9 +45,13 @@ class ServiceHistoryCubit extends Cubit<ServiceHistoryState> {
       notes: notes,
       nextServiceDate: nextServiceDate,
     );
-    final updatedRecords = List<ServiceRecordModel>.from(state.serviceRecords)
-      ..add(newRecord);
-    emit(state.copyWith(serviceRecords: updatedRecords));
+
+    try {
+      await addServiceRecordUseCase(newRecord);
+      await loadServiceRecords();
+    } catch (e) {
+      rethrow;
+    }
   }
 
   void deleteServiceRecord(String id) {
@@ -45,4 +63,3 @@ class ServiceHistoryCubit extends Cubit<ServiceHistoryState> {
     emit(const ServiceHistoryState());
   }
 }
-

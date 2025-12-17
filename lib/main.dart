@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_practice11/core/di/injection_container.dart';
 import 'package:flutter_practice11/features/auth/logic/auth_cubit.dart';
-import 'package:flutter_practice11/features/car_expenses/logic/car_expenses_cubit.dart';
-import 'package:flutter_practice11/features/favorite_places/logic/favorite_places_cubit.dart';
-import 'package:flutter_practice11/features/navigation/app_router.dart';
 import 'package:flutter_practice11/features/profile/logic/profile_cubit.dart';
+import 'package:flutter_practice11/features/vehicles/logic/vehicles_cubit.dart';
+import 'package:flutter_practice11/features/car_expenses/logic/car_expenses_cubit.dart';
 import 'package:flutter_practice11/features/service_history/logic/service_history_cubit.dart';
+import 'package:flutter_practice11/features/tips/logic/tips_cubit.dart';
+import 'package:flutter_practice11/features/favorite_places/logic/favorite_places_cubit.dart';
 import 'package:flutter_practice11/features/settings/logic/settings_cubit.dart';
+import 'package:flutter_practice11/features/navigation/app_router.dart';
 import 'package:flutter_practice11/features/settings/logic/settings_state.dart';
 import 'package:flutter_practice11/core/models/app_settings_model.dart';
-import 'package:flutter_practice11/features/tips/logic/tips_cubit.dart';
-import 'package:flutter_practice11/features/vehicles/logic/vehicles_cubit.dart';
 import 'package:flutter_practice11/shared/app_theme.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await setupDependencies();
   runApp(const MyApp());
 }
 
@@ -24,14 +27,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => AuthCubit()),
-        BlocProvider(create: (context) => ProfileCubit()),
-        BlocProvider(create: (context) => VehiclesCubit()),
-        BlocProvider(create: (context) => CarExpensesCubit()),
-        BlocProvider(create: (context) => ServiceHistoryCubit()),
-        BlocProvider(create: (context) => TipsCubit()),
-        BlocProvider(create: (context) => FavoritePlacesCubit()),
-        BlocProvider(create: (context) => SettingsCubit()),
+        BlocProvider(create: (context) => getIt<AuthCubit>()),
+        BlocProvider(create: (context) => getIt<ProfileCubit>()),
+        BlocProvider(create: (context) => getIt<VehiclesCubit>()),
+        BlocProvider(create: (context) => getIt<CarExpensesCubit>()),
+        BlocProvider(create: (context) => getIt<ServiceHistoryCubit>()),
+        BlocProvider(create: (context) => getIt<TipsCubit>()),
+        BlocProvider(create: (context) => getIt<FavoritePlacesCubit>()),
+        BlocProvider(create: (context) => getIt<SettingsCubit>()),
       ],
       child: BlocBuilder<SettingsCubit, SettingsState>(
         builder: (context, settingsState) {
