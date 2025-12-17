@@ -1,4 +1,4 @@
-import 'package:flutter_practice11/features/settings/models/app_settings_model.dart';
+import 'package:flutter_practice11/core/models/app_settings_model.dart';
 
 class FormatHelpers {
   static String formatCurrency(double amount, Currency currency) {

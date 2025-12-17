@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_practice11/features/tips/models/tip_model.dart';
+import 'package:flutter_practice11/core/models/tip_model.dart';
 
 class TipsState extends Equatable {
   final List<TipModel> tips;

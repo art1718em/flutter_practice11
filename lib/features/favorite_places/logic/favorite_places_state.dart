@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_practice11/features/favorite_places/models/favorite_place_model.dart';
+import 'package:flutter_practice11/core/models/favorite_place_model.dart';
 
 class FavoritePlacesState extends Equatable {
   final List<FavoritePlaceModel> places;

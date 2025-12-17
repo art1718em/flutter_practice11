@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_practice11/features/auth/models/user_model.dart';
+import 'package:flutter_practice11/core/models/user_model.dart';
 import 'package:uuid/uuid.dart';
 import 'auth_state.dart';
 

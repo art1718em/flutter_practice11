@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_practice11/features/service_history/logic/service_history_cubit.dart';
-import 'package:flutter_practice11/features/service_history/models/service_record_model.dart';
+import 'package:flutter_practice11/core/models/service_record_model.dart';
 import 'package:flutter_practice11/features/settings/logic/settings_cubit.dart';
 import 'package:flutter_practice11/features/settings/logic/settings_state.dart';
-import 'package:flutter_practice11/features/settings/models/app_settings_model.dart';
+import 'package:flutter_practice11/core/models/app_settings_model.dart';
 import 'package:flutter_practice11/features/vehicles/logic/vehicles_cubit.dart';
 import 'package:flutter_practice11/shared/utils/format_helpers.dart';
 import 'package:go_router/go_router.dart';

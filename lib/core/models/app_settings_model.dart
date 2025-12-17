@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 enum AppThemeMode {
   light,
   dark,
@@ -72,7 +74,7 @@ extension DistanceUnitExtension on DistanceUnit {
   }
 }
 
-class AppSettingsModel {
+class AppSettingsModel extends Equatable {
   final AppThemeMode themeMode;
   final Currency currency;
   final DistanceUnit distanceUnit;
@@ -102,5 +104,13 @@ class AppSettingsModel {
       autoBackup: autoBackup ?? this.autoBackup,
     );
   }
-}
 
+  @override
+  List<Object?> get props => [
+        themeMode,
+        currency,
+        distanceUnit,
+        notificationsEnabled,
+        autoBackup,
+      ];
+}

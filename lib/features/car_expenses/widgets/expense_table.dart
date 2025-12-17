@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_practice11/features/settings/models/app_settings_model.dart';
-import '../models/expense_model.dart';
+import 'package:flutter_practice11/core/models/app_settings_model.dart';
+import 'package:flutter_practice11/core/models/expense_model.dart';
 import 'expense_row.dart';
 
 class ExpenseTable extends StatelessWidget {

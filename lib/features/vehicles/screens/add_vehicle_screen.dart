@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_practice11/features/settings/logic/settings_cubit.dart';
 import 'package:flutter_practice11/features/settings/logic/settings_state.dart';
-import 'package:flutter_practice11/features/settings/models/app_settings_model.dart';
+import 'package:flutter_practice11/core/models/app_settings_model.dart';
 import 'package:flutter_practice11/features/vehicles/logic/vehicles_cubit.dart';
 
 class AddVehicleScreen extends StatefulWidget {

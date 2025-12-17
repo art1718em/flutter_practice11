@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_practice11/features/auth/models/user_model.dart';
+import 'package:flutter_practice11/core/models/user_model.dart';
 
 enum AuthStatus { initial, authenticated, unauthenticated, loading, error }
 

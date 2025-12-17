@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_practice11/features/service_history/models/service_record_model.dart';
+import 'package:flutter_practice11/core/models/service_record_model.dart';
 import 'package:uuid/uuid.dart';
 import 'service_history_state.dart';
 

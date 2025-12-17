@@ -1,4 +1,6 @@
-class UserProfileModel {
+import 'package:equatable/equatable.dart';
+
+class UserProfileModel extends Equatable {
   final String userId;
   final String name;
   final String email;
@@ -7,7 +9,7 @@ class UserProfileModel {
   final String? drivingLicenseNumber;
   final int? drivingExperienceYears;
 
-  UserProfileModel({
+  const UserProfileModel({
     required this.userId,
     required this.name,
     required this.email,
@@ -36,6 +38,15 @@ class UserProfileModel {
       drivingExperienceYears: drivingExperienceYears ?? this.drivingExperienceYears,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        userId,
+        name,
+        email,
+        phone,
+        avatar,
+        drivingLicenseNumber,
+        drivingExperienceYears,
+      ];
 }
-
-

@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_practice11/features/profile/models/user_profile_model.dart';
+import 'package:flutter_practice11/core/models/user_profile_model.dart';
 import 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {

@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_practice11/features/vehicles/models/vehicle_model.dart';
+import 'package:flutter_practice11/core/models/vehicle_model.dart';
 import 'package:uuid/uuid.dart';
 import 'vehicles_state.dart';
 

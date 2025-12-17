@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_practice11/features/favorite_places/logic/favorite_places_cubit.dart';
 import 'package:flutter_practice11/features/favorite_places/logic/favorite_places_state.dart';
-import 'package:flutter_practice11/features/favorite_places/models/favorite_place_model.dart';
+import 'package:flutter_practice11/core/models/favorite_place_model.dart';
 
 class PlaceDetailsScreen extends StatelessWidget {
   final String placeId;

@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 enum ServiceType {
   maintenance('Плановое ТО', '🔧'),
   repair('Ремонт', '🔨'),
@@ -11,19 +13,19 @@ enum ServiceType {
   const ServiceType(this.displayName, this.icon);
 }
 
-class ServiceRecordModel {
+class ServiceRecordModel extends Equatable {
   final String id;
   final String vehicleId;
   final String title;
   final ServiceType type;
   final DateTime date;
-  final int? mileage; // Пробег на момент обслуживания
-  final List<String> worksDone; // Список выполненных работ
-  final String? serviceCenter; // Название СТО
-  final String? notes; // Дополнительные заметки
-  final DateTime? nextServiceDate; // Дата следующего ТО
+  final int? mileage;
+  final List<String> worksDone;
+  final String? serviceCenter;
+  final String? notes;
+  final DateTime? nextServiceDate;
 
-  ServiceRecordModel({
+  const ServiceRecordModel({
     required this.id,
     required this.vehicleId,
     required this.title,
@@ -61,5 +63,18 @@ class ServiceRecordModel {
       nextServiceDate: nextServiceDate ?? this.nextServiceDate,
     );
   }
-}
 
+  @override
+  List<Object?> get props => [
+        id,
+        vehicleId,
+        title,
+        type,
+        date,
+        mileage,
+        worksDone,
+        serviceCenter,
+        notes,
+        nextServiceDate,
+      ];
+}

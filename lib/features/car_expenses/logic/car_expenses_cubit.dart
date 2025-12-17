@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_practice11/features/car_expenses/models/expense_model.dart';
+import 'package:flutter_practice11/core/models/expense_model.dart';
 import 'package:uuid/uuid.dart';
 import 'car_expenses_state.dart';
 

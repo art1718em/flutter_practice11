@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_practice11/features/service_history/models/service_record_model.dart';
+import 'package:flutter_practice11/core/models/service_record_model.dart';
 
 class ServiceHistoryState extends Equatable {
   final List<ServiceRecordModel> serviceRecords;

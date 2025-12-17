@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_practice11/features/car_expenses/models/expense_model.dart';
+import 'package:flutter_practice11/core/models/expense_model.dart';
 
 class CarExpensesState extends Equatable {
   final List<ExpenseModel> expenses;

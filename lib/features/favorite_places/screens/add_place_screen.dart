@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_practice11/features/favorite_places/logic/favorite_places_cubit.dart';
-import 'package:flutter_practice11/features/favorite_places/models/favorite_place_model.dart';
+import 'package:flutter_practice11/core/models/favorite_place_model.dart';
 
 class AddPlaceScreen extends StatefulWidget {
   const AddPlaceScreen({super.key});

@@ -1,4 +1,6 @@
-class VehicleModel {
+import 'package:equatable/equatable.dart';
+
+class VehicleModel extends Equatable {
   final String id;
   final String brand;
   final String model;
@@ -10,7 +12,7 @@ class VehicleModel {
   final DateTime? purchaseDate;
   final bool isActive;
 
-  VehicleModel({
+  const VehicleModel({
     required this.id,
     required this.brand,
     required this.model,
@@ -48,6 +50,18 @@ class VehicleModel {
       isActive: isActive ?? this.isActive,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        id,
+        brand,
+        model,
+        year,
+        vin,
+        licensePlate,
+        color,
+        mileage,
+        purchaseDate,
+        isActive,
+      ];
 }
-
-

@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_practice11/features/settings/models/app_settings_model.dart';
+import 'package:flutter_practice11/core/models/app_settings_model.dart';
 import 'settings_state.dart';
 
 class SettingsCubit extends Cubit<SettingsState> {

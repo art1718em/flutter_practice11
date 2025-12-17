@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 enum PlaceType {
   service,
   carWash,
@@ -38,7 +40,7 @@ extension PlaceTypeExtension on PlaceType {
   }
 }
 
-class FavoritePlaceModel {
+class FavoritePlaceModel extends Equatable {
   final String id;
   final String name;
   final PlaceType type;
@@ -48,7 +50,7 @@ class FavoritePlaceModel {
   final String? notes;
   final DateTime? lastVisit;
 
-  FavoritePlaceModel({
+  const FavoritePlaceModel({
     required this.id,
     required this.name,
     required this.type,
@@ -80,6 +82,16 @@ class FavoritePlaceModel {
       lastVisit: lastVisit ?? this.lastVisit,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        id,
+        name,
+        type,
+        address,
+        phone,
+        rating,
+        notes,
+        lastVisit,
+      ];
 }
-
-

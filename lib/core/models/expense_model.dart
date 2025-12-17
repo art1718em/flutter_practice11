@@ -1,11 +1,13 @@
-class ExpenseModel {
+import 'package:equatable/equatable.dart';
+
+class ExpenseModel extends Equatable {
   final String id;
   final String vehicleId;
   final String title;
   final double amount;
   final DateTime date;
 
-  ExpenseModel({
+  const ExpenseModel({
     required this.id,
     required this.vehicleId,
     required this.title,
@@ -28,5 +30,7 @@ class ExpenseModel {
       date: date ?? this.date,
     );
   }
-}
 
+  @override
+  List<Object?> get props => [id, vehicleId, title, amount, date];
+}

@@ -1,4 +1,6 @@
-class TipModel {
+import 'package:equatable/equatable.dart';
+
+class TipModel extends Equatable {
   final String id;
   final String title;
   final String content;
@@ -8,7 +10,7 @@ class TipModel {
   final int likes;
   final bool isLiked;
 
-  TipModel({
+  const TipModel({
     required this.id,
     required this.title,
     required this.content,
@@ -40,6 +42,16 @@ class TipModel {
       isLiked: isLiked ?? this.isLiked,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        id,
+        title,
+        content,
+        category,
+        publishDate,
+        imageUrl,
+        likes,
+        isLiked,
+      ];
 }
-
-
